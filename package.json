@@ -1,29 +1,32 @@
 {
-    "name": "awesome-vscode-extension-boilerplate",
-    "displayName": "Awesome VSCode Extension Boilerplate",
+    "name": "contrail",
+    "displayName": "Contrail",
     "version": "0.0.29",
-    "description": "An awesome vscode extension boilerplate",
+    "description": "Generates visual diagrams of complex algorithms to help you decipher your code.",
     "publisher": "YuTengjing",
     "private": true,
     "preview": true,
     "author": {
-        "name": "YuTengjing",
-        "email": "ytj2713151713@gmail.com",
-        "url": "https://github.com/tjx666"
+        "name": "Shrey Pandya",
+        "email": "shrey150@yahoo.com",
+        "url": "areebkhan.com"
     },
     "license": "SEE LICENSE IN LICENSE",
-    "homepage": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/blob/master/README.md",
+    "homepage": "https://github.com/akhan280/contrail/blob/master/README.md",
     "repository": {
         "type": "git",
-        "url": "https://github.com/tjx666/awesome-vscode-extension-boilerplate"
+        "url": "https://github.com/akhan280/contrail"
     },
     "bugs": {
-        "url": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/issues",
-        "email": "ytj2713151713@gmail.com"
+        "url": "https://github.com/akhan280/contrail/issues",
+        "email": "shrey150@yahoo.com"
     },
     "keywords": [
-        "boilerplate",
-        "template"
+        "productivity",
+        "ai",
+        "visualization",
+        "diagram",
+        "chart"
     ],
     "categories": [
         "Other"
@@ -37,7 +40,7 @@
         {
             "url": "https://img.shields.io/badge/PRs-welcome-brightgreen.svg",
             "description": "PRs Welcome",
-            "href": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/fork"
+            "href": "https://github.com/akhan280/contrail/fork"
         }
     ],
     "activationEvents": [],
