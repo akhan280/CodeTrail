@@ -9,7 +9,7 @@
     "author": {
         "name": "Shrey Pandya",
         "email": "shrey150@yahoo.com",
-        "url": "areebkhan.com"
+        "url": "https://areebkhan.com"
     },
     "license": "SEE LICENSE IN LICENSE",
     "homepage": "https://github.com/akhan280/contrail/blob/master/README.md",
@@ -59,15 +59,6 @@
         ]
     },
     "prettier": "@yutengjing/prettier-config",
-    "lint-staged": {
-        "*.{ts,json,md}": [
-            "eslint --fix",
-            "prettier --write"
-        ]
-    },
-    "simple-git-hooks": {
-        "pre-commit": "npx lint-staged"
-    },
     "scripts": {
         "vscode:prepublish": "pnpm esbuild:base --minify",
         "preinstall": "npx only-allow pnpm",
