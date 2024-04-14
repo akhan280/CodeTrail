@@ -3,10 +3,9 @@ from fastapi import FastAPI
 from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
-from prompts import generateCommentsPrompt, generateMermaidCodePrompt
+from prompts import generateComments, generateMermaidCode, generateCodeFromImage, 
 
 app = FastAPI()
-
 
 class GenerateModel(BaseModel):
     provider: str
@@ -40,7 +39,7 @@ def generation(body: GenerateModel):
 
     # 3) First pass prompt modulation: add comments
     try: 
-        response = prompt_generator(model, generateCommentsPrompt() + prompt)
+        response = prompt_generator(model, generateComments() + prompt)
         
         
     except Exception as e: 
@@ -52,7 +51,7 @@ def generation(body: GenerateModel):
 
     # 4) Second pass prompt modulation: create mermaid code
     try:
-        response = prompt_generator(model, generateMermaidCodePrompt() + prompt)
+        response = prompt_generator(model, generateMermaidCode() + prompt)
    
     except Exception as e:
         print(str(e))
@@ -60,7 +59,6 @@ def generation(body: GenerateModel):
 
 
     return {response.text}
-
 
 
 
@@ -90,7 +88,7 @@ def code_generation(body: CodeGenModel):
 
     # 3) First pass creates code that's extremely well commented, complete, and documented
     try: 
-        response = prompt_generator(model, 'todo: implement new prompt' + prompt, image_data)
+        response = prompt_generator(model, generateCodeFromImage() + prompt, image_data)
   
     except Exception as e: 
         print(str(e))
@@ -102,7 +100,7 @@ def code_generation(body: CodeGenModel):
 
     # 4) Second pass prompt modulation: create mermaid code
     try:
-        response = prompt_generator(model, mermaidCodeSystemPrompt() + image_data)
+        response = prompt_generator(model, generateMermaidCode() + image_data)
    
     except Exception as e:
         print(str(e))
