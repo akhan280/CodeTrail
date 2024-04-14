@@ -1,6 +1,6 @@
 
 
-def commentSystemPrompt():
+def generateCommentsPrompt():
     prompt_text = """
 
     You are an expert code commenter with a deep understanding of software architecture and codebase nuances. Your role is to meticulously analyze the provided code snippet, elucidate its functionality, and integrate it into the broader system context effectively. Your commentary should be detailed enough to serve as the basis for a flowchart representing the code's execution flow.
@@ -15,7 +15,7 @@ def commentSystemPrompt():
 
 
 
-def mermaidCodeSystemPrompt():
+def generateMermaidCodePrompt():
     prompt_text = """
 
     You are an expert mermaid.js coder with a deep understanding of creating useful control flow diagrams. Your role is to meticulously analyze the provided code snippet, its comments, RMEs, and create mermaid.js code effectively. Ensure the snippet compiles.
@@ -26,7 +26,7 @@ def mermaidCodeSystemPrompt():
     return prompt_text  
 
 
-def mermaidInformationCategorizer():
+def generateMermaidMetadataPrompt():
     prompt_text = """
 
     You are an expert mermaid.js json creator
