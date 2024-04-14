@@ -1,11 +1,13 @@
+import * as path from 'node:path';
+
 import axios from 'axios';
 import { fromUint8Array } from 'js-base64';
 import { deflate } from 'pako';
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as payload from '../../data/granular/payload.json';
 
 import { makeMermaidPayload, getMakeGraphWebViewContent, getQueryWebViewContent } from './templates';
+import * as payload from '../../data/granular/payload.json';
+
 // import mermaidAPI from 'mermaid/dist/mermaidAPI';
 
 
