@@ -2,7 +2,8 @@ import axios from 'axios';
 import { fromUint8Array } from 'js-base64';
 import { deflate } from 'pako';
 import * as vscode from 'vscode';
-import 
+import * as path from 'path';
+import * as payload from '../../data/granular/payload.json';
 
 import { makeMermaidPayload, getMakeGraphWebViewContent, getQueryWebViewContent } from './templates';
 // import mermaidAPI from 'mermaid/dist/mermaidAPI';
@@ -98,6 +99,36 @@ export function activate(context: vscode.ExtensionContext) {
     let previewPanel: vscode.WebviewPanel;
     const appLog = vscode.window.createOutputChannel("Contrail");
 
+    const openFileAndHighlight = (payload: any, symbol: string) => {
+        appLog.appendLine(`openFileAndHighlight`);
+        // Find the corresponding symbol in the payload
+        const entry = payload.symbols.find((s: any) => s.symbol === symbol);
+        appLog.appendLine(`entry: ${JSON.stringify(entry)}`);
+    
+        if (entry) {
+            const { filename, start, end } = entry;
+    
+            // Resolve filename relative to the workspace root
+            const workspaceRoot = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
+            const fullPath = path.join(workspaceRoot, filename);
+    
+            // Open the file directly
+            vscode.workspace.openTextDocument(fullPath)
+                .then(document => vscode.window.showTextDocument(document, { viewColumn: vscode.ViewColumn.One }))
+                .then(editor => {
+                    if (editor) {
+                        // Create a new selection from start to end
+                        const startPosition = new vscode.Position(start - 1, 0);
+                        const endPosition = new vscode.Position(end - 1, 0);
+                        const range = new vscode.Range(startPosition, endPosition);
+                        editor.selection = new vscode.Selection(range.start, range.end);
+                        editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+                    }
+                })
+        }
+    };
+    
+
     const makeGraphHandler = () => {
         if (!previewPanel) {
             previewPanel = vscode.window.createWebviewPanel(
@@ -110,6 +141,14 @@ export function activate(context: vscode.ExtensionContext) {
             previewPanel.webview.options = {
                 enableScripts: true,
             };
+
+            previewPanel.webview.onDidReceiveMessage(
+                (message: any) => {
+                    appLog.appendLine(`received message ${JSON.stringify(message)}`)
+                    // vscode.window.showInformationMessage('hooray!!', JSON.stringify(message));
+                    openFileAndHighlight(payload, message.symbol);
+                }
+            )
     
             previewPanel.webview.html = getWebviewContent();
         }
@@ -130,83 +169,12 @@ export function activate(context: vscode.ExtensionContext) {
         appLog.appendLine(res.data);
         return res.data;
     };
-    
-    const diagram = `flowchart TD
-        A[Christmas] -->|Get money| B(Go shopping)
-        B --> C{Let me think}
-        C -->|One| D[Laptop]
-        C -->|Two| E[iPhone]
-        C -->|Three| F[fa:fa-car Car]
-    `;
-
-    const openFileAndHighlight = (payload: any, symbol: string) => {
-         // Find the corresponding symbol in the payload
-         const entry = payload.symbols.find((s: any) => s.symbol === symbol);
-
-         if (entry) {
-             const { filename, start, end } = entry;
- 
-             // Open and reveal the file
-             const uri = vscode.Uri.file(`${vscode.workspace.rootPath  }/${  filename}`);
-             vscode.workspace.openTextDocument(uri).then(doc => {
-                 vscode.window.showTextDocument(doc, { preview: false }).then(editor => {
-                    // Create a new selection from start to end
-                    const range = new vscode.Range(start - 1, 0, end - 1, 0);
-                    editor.selection = new vscode.Selection(range.start, range.end);
-                    editor.revealRange(range);
-                });
-            });
-        }
-    };
 
     const fetchSVG = async () => {
         try {
-            const svg = await mermaidToSVG(diagram);
+            appLog.appendLine(payload.graph);
+            const svg = await mermaidToSVG(payload.graph);
             appLog.appendLine(`SVG: ${svg}`);
-            previewPanel?.webview.postMessage({ generated: svg });
-
-            const payload = {
-                symbols: [
-                    {
-                        symbol: 'A',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                    {
-                        symbol: 'B',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                    {
-                        symbol: 'C',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                    {
-                        symbol: 'D',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                    {
-                        symbol: 'E',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                    {
-                        symbol: 'F',
-                        filename: 'foo.cpp',
-                        start: 15,
-                        end: 30,
-                    },
-                ],
-                graph: diagram,
-            };
-
             previewPanel.webview.html = getWebviewContent(svg);
         }
         catch (error) {
@@ -223,6 +191,30 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWebviewContent(svg?: string) {
+
+    const scriptContent = `
+        const vscode = acquireVsCodeApi();
+
+        document.querySelectorAll('[data-id]').forEach(element => {
+            element.addEventListener('click', function() {
+                const nodeId = this.getAttribute('data-id');
+                if(nodeId) {
+                    onNodeClickHandler(nodeId);
+                }
+            });
+        });
+
+        function onNodeClickHandler(nodeId) {
+            console.log('Node clicked:', nodeId);
+            alert('clicked!')
+            vscode.postMessage({
+                command: 'alert',
+                text: 'hi',
+                symbol: nodeId,
+            })
+        }
+    `;
+
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -233,6 +225,7 @@ function getWebviewContent(svg?: string) {
             </head>
             <body>
                 <div id="graphDiv">${svg || "Loading..."}</div>
+                <script>(() => { ${scriptContent} })()</script>
             </body>
         </html>
     `;

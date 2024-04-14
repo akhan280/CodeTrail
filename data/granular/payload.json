@@ -2,127 +2,127 @@
   "symbols": [
     {
       "symbol": "id1",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 1,
       "end": 8
     },
     {
       "symbol": "id2",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 9,
       "end": 11
     },
     {
       "symbol": "id3",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 12,
       "end": 14
     },
     {
       "symbol": "id4",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 15,
       "end": 17
     },
     {
       "symbol": "id5",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 18,
       "end": 21
     },
     {
       "symbol": "id6",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 22,
       "end": 26
     },
     {
       "symbol": "id7",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 27,
       "end": 29
     },
     {
       "symbol": "id8",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 30,
       "end": 33
     },
     {
       "symbol": "id9",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 34,
       "end": 37
     },
     {
       "symbol": "id10",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 34,
       "end": 37
     },
     {
       "symbol": "id11",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 34,
       "end": 37
     },
     {
       "symbol": "id12",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 38,
       "end": 42
     },
     {
       "symbol": "id13",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 43,
       "end": 45
     },
     {
       "symbol": "id14",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 46,
       "end": 48
     },
     {
       "symbol": "id15",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 49,
       "end": 51
     },
     {
       "symbol": "id16",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 52,
       "end": 57
     },
     {
       "symbol": "id17",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 52,
       "end": 57
     },
     {
       "symbol": "id18",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 52,
       "end": 57
     },
     {
       "symbol": "id19",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 58,
       "end": 60
     },
     {
       "symbol": "id20",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 61,
       "end": 63
     },
     {
       "symbol": "id21",
-      "filename": "analyze_text_complexity.py",
+      "filename": "data/granular/analyze_text_complexity.py",
       "start": 64,
       "end": 64
     }

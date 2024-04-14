@@ -2,41 +2,49 @@
     "symbols": [
       {
         "symbol": "Start",
+        "filename": "sample_code.py",
         "start": 1,
         "end": 8
       },
       {
         "symbol": "Split Text",
+        "filename": "sample_code.py",
         "start": 9,
         "end": 10
       },
       {
         "symbol": "Initialize variables",
+        "filename": "sample_code.py",
         "start": 11,
         "end": 14
       },
       {
         "symbol": "Loop through sentences",
+        "filename": "sample_code.py",
         "start": 15,
         "end": 15
       },
       {
         "symbol": "Process words in sentence",
+        "filename": "sample_code.py",
         "start": 16,
         "end": 23
       },
       {
         "symbol": "Calculate metrics",
+        "filename": "sample_code.py",
         "start": 24,
         "end": 27
       },
       {
         "symbol": "Calculate complexity score",
+        "filename": "sample_code.py",
         "start": 28,
         "end": 28
       },
       {
         "symbol": "Analyze complexity and provide suggestions",
+        "filename": "sample_code.py",
         "start": 29,
         "end": 36
       }
