@@ -52,8 +52,7 @@ def generateMermaidMetadata():
 
 def generateCodeFromImage():
     prompt_text = """
-    You are an code writer from control flow diagrams. Analyze the following photo or text and attempt to replicate the logic represented into a program. Ensure that your
-    efforts are very well documented and representative of the image or text.
+    You are an expert software developer and machine learning engineer. From an image and an analysis task, develop the code that would perform the task.
     """
 
     return prompt_text  

@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
 from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
@@ -17,7 +18,7 @@ class CodeGenModel(GenerateModel):
     img_format: str
 
 # Generates api response from gemini
-@app.post("/api/graph/generate")
+@app.post("/api/graph/generate", response_class=PlainTextResponse)
 def generation(body: GenerateModel):
 
     # TODO: Perform auth check
@@ -39,7 +40,7 @@ def generation(body: GenerateModel):
 
     # 3) First pass prompt modulation: add comments
     try: 
-        response = prompt_generator(model, generateComments() + prompt)
+        response = prompt_generator(model, generateComments() + prompt, [])
         
         
     except Exception as e: 
@@ -50,7 +51,7 @@ def generation(body: GenerateModel):
 
     # 4) Second pass prompt modulation: create mermaid code
     try:
-        response = prompt_generator(model, generateMermaidCode() + prompt)
+        response = prompt_generator(model, generateMermaidCode() + prompt, [])
    
     except Exception as e:
         print(str(e))
@@ -58,14 +59,15 @@ def generation(body: GenerateModel):
 
     print('[Generate] Completed Mermaid Code. Creating metadata next')
     
-    # 5) Final pass metadata creation
-    try:
-        metadata = prompt_generator(model, generateMermaidMetadata() + response.text, [])
-    except Exception as e:
-        print(str(e))
-        return {"error": str(e)}, 500
+    # # 5) Final pass metadata creation
+    # try:
+    #     metadata = prompt_generator(model, generateMermaidMetadata() + response.text, [])
+    # except Exception as e:
+    #     print(str(e))
+    #     return {"error": str(e)}, 500
     
-    return {"mermaid": response.text, "metadata": metadata.text}
+    # return {"mermaid": response.text, "metadata": metadata.text}
+    return response.text
 
 
 @app.post("/api/code/generate-code")
@@ -113,4 +115,4 @@ def code_generation(body: CodeGenModel):
         print(str(e))
         return {"error": str(e)}, 500
     
-    return {"mermaid": response.text, "metadata": metadata.text}
+    return {"mermaid": f"{response.text}", "metadata": f"{metadata.text}"}
