@@ -46,8 +46,7 @@ def generation(body: GenerateModel):
         print(str(e))
         return 500
 
-    print('Created Commented Code')
-    print(response.text)
+    print('[Gernerate] Created Commented Code')
 
     # 4) Second pass prompt modulation: create mermaid code
     try:
@@ -57,11 +56,19 @@ def generation(body: GenerateModel):
         print(str(e))
         return 500
 
+    print('[Generate] Completed Mermaid Code. Creating metadata next')
+    
+    # 5) Final pass metadata creation
+    try:
+        metadata = prompt_generator(model, generateMermaidMetadata() + response.text, [])
+    except Exception as e:
+        print(str(e))
+        return {"error": str(e)}, 500
+    
+    return {"mermaid": response.text, "metadata": metadata.text}
 
-    return {response.text}
 
-
-@app.post("/api/code/generate")
+@app.post("/api/code/generate-code")
 def code_generation(body: CodeGenModel):
     print('[Code Generation] Starting')
     # TODO: Perform auth check

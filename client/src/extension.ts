@@ -12,31 +12,6 @@ const useSVGStore = create<SVGState>((set) => ({
     updateSVGData: (data) => set({ svgData: data }),
 }));
 
-// function getMakeGraphWebViewContent() {
-//     return `
-//         <!DOCTYPE html>
-//         <html lang="en">
-//         <head>
-//             <meta charset="UTF-8">
-//             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//             <title>Text Input</title>
-//         </head>
-//         <body>
-//             <input type="text" id="inputField" placeholder="Type here...">
-//             <button onclick="sendText()">Submit</button>
-//             <div id="displayText"></div>
-
-//             <script>
-//                 const vscode = acquireVsCodeApi();
-//                 function sendText() {
-//                     const input = document.getElementById('inputField').value;
-//                     document.getElementById('displayText').innerText = input;
-//                 }
-//             </script>
-//         </body>
-//         </html>
-//     `;
-// }
 
 function getMakeGraphWebViewContent() {
     return `
@@ -141,36 +116,118 @@ function getMakeGraphWebViewContent() {
 }
 
 
-const showGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
+function getQueryWebViewContent() {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Code Input</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 20px;
+                }
+                #loadingIndicator {
+                    font-size: 24px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Processing code...</h2>
+            <div id="loadingIndicator">Loading...</div>
+            <div id="responseContainer"></div>
 
-    console.log("hi")
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
+                const vscode = acquireVsCodeApi();
 
-    if (!previewPanel) {
-        previewPanel = vscode.window.createWebviewPanel(
-            'showGraph',
-            'Show Graph',
-            vscode.ViewColumn.Two,
-            {}
-        );
+                // Listen for messages from the extension
+                window.addEventListener('message', event => {
+                    const message = event.data;
+                    if (message.type === 'processCode') {
+                        processCode(message.value);
+                    }
+                });
 
-        previewPanel.onDidDispose(() => {
-            previewPanel = undefined;
-            // previewPanel = null;
-        }, null);
-    }
-    else {
-        previewPanel.reveal(vscode.ViewColumn.Two);
-    }
-
-
-    // previewPanel.webview.html = getMakeGraphWebViewContent();
-
-        // previewPanel.webview.html = getWebviewContent();
-    
+                function processCode(code) {
+                    // Make an Axios API call
+                    axios.post('https://http://0.0.0.0:8000/api/graph/generate', {
+                        code: code
+                    })
+                    .then(function (response) {
+                        // Handle the response
+                        const responseData = response.data;
+                        document.getElementById('responseContainer').innerText = JSON.stringify(responseData);
+                    })
+                    .catch(function (error) {
+                        // Handle any errors
+                        console.error(error);
+                    })
+                    .finally(function () {
+                        // Hide the loading indicator
+                        document.getElementById('loadingIndicator').style.display = 'none';
+                    });
+                }
+            </script>
+        </body>
+        </html>
+    `;
 }
 
+async function copyTextToClipboard() {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        const text = editor.document.getText(editor.selection);
+        try {
+            await vscode.env.clipboard.writeText(text);
+            vscode.window.showInformationMessage('Text copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    }
+}
+
+
+const showGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
+    return async () => {
+        // Copy selected text to clipboard before showing the graph
+        await copyTextToClipboard();
+
+        if (!previewPanel) {
+            previewPanel = vscode.window.createWebviewPanel(
+                'showGraph',
+                'Show Graph',
+                vscode.ViewColumn.Two,
+                {}
+            );
+
+            previewPanel.onDidDispose(() => {
+                previewPanel = undefined;
+            }, null);
+        } else {
+            previewPanel.reveal(vscode.ViewColumn.Two);
+        }
+
+        // Assuming getQueryWebViewContent() returns the content for the webview
+        previewPanel.webview.html = getQueryWebViewContent();
+
+        // Read the clipboard content
+        const clipboardContent = await vscode.env.clipboard.readText();
+
+        // Set the clipboard content as the value of the textarea
+        previewPanel.webview.postMessage({ type: 'setTextareaValue', value: clipboardContent });
+    };
+};
+
 const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
-    return () => {
+    return async () => {
         if (previewPanel) {
             // Bring the panel to the foreground if it's already created
             previewPanel.reveal(vscode.ViewColumn.Two);
@@ -194,38 +251,14 @@ const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
                 // previewPanel = null;
             }, null);
         }
+
+        // Read the clipboard content
+        const clipboardContent = await vscode.env.clipboard.readText();
+
+        // Set the clipboard content as the value of the textarea
+        previewPanel.webview.postMessage({ type: 'setTextareaValue', value: clipboardContent });
     };
 };
-
-// const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
-
-//     if (previewPanel){
-//         return;
-//     }
-
-//     previewPanel = vscode.window.createWebviewPanel(
-//         'textWebview',
-//         'Text Webview',
-//         vscode.ViewColumn.One,
-//         {
-//             enableScripts: true
-//         }
-//     );
-
-//     // previewPanel.webview.html = getWebviewContent();
-
-
-
-// //    previewPanel = vscode.window.createWebviewPanel(
-// //         'showGraph',
-// //         'Show Graph',
-// //         vscode.ViewColumn.Two,
-// //         {}
-    
-//         // previewPanel.webview.html = getWebviewContent();
-//     }
-// }
-
 
 
 export function activate(context: vscode.ExtensionContext) {
