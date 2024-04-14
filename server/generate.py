@@ -110,5 +110,3 @@ def code_generation(body: CodeGenModel):
 
 
     return {response.text}
-
-
