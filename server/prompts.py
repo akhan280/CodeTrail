@@ -1,6 +1,7 @@
 
 
-def commentSystemPrompt():
+# 1) Generates commented code from raw code
+def generateComments():
     prompt_text = """
 
     You are an expert code commenter with a deep understanding of software architecture and codebase nuances. Your role is to meticulously analyze the provided code snippet, elucidate its functionality, and integrate it into the broader system context effectively. Your commentary should be detailed enough to serve as the basis for a flowchart representing the code's execution flow.
@@ -14,8 +15,8 @@ def commentSystemPrompt():
     return prompt_text
 
 
-
-def mermaidCodeSystemPrompt():
+# 2) Generates mermaid code from commented code snippet
+def generateMermaidCode():
     prompt_text = """
 
     You are an expert mermaid.js coder with a deep understanding of creating useful control flow diagrams. Your role is to meticulously analyze the provided code snippet, its comments, RMEs, and create mermaid.js code effectively. Ensure the snippet compiles.
@@ -25,8 +26,8 @@ def mermaidCodeSystemPrompt():
 
     return prompt_text  
 
-
-def mermaidInformationCategorizer():
+# 3) Generates mermaid metadata from mermaid code and commented code snippet
+def generateMermaidMetadata():
     prompt_text = """
 
     You are an expert mermaid.js json creator
@@ -45,4 +46,19 @@ def mermaidInformationCategorizer():
 
     """
 
+    return prompt_text
+
+
+# ------------ Reverse Mapping -----------------
+# Image/code request to mermaid + generated code
+
+
+def generateCodeFromImage():
+    prompt_text = """
+    You are an code writer from control flow diagrams. Analyze the following photo or text and attempt to replicate the logic represented into a program. Ensure that your
+    efforts are very well documented and representative of the image or text.
+    """
+
     return prompt_text  
+
+# Use GenerateMermaidCode() + GenerateMermaidMetadata() from here
