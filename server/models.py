@@ -9,14 +9,12 @@ import pathlib
 
 
 def gemini_generation(model, prompt, image_data):
-    
+    print('[GEMINI] Generating Response')
     genai.configure(api_key=os.environ['gemini_api_key'])
     model = genai.GenerativeModel(model)
 
     if image_data[0]:
-        response = model.generate_content(prompt)
-    else:
-
+        print('[GEMINI] Creating image response')
         cookie_picture = [{
             'mime_type': image_data[1],
             'data': pathlib.Path(image_data[0]).read_bytes()
@@ -26,6 +24,10 @@ def gemini_generation(model, prompt, image_data):
             model= "gemini-pro-vision",
             content=[prompt, cookie_picture]
         )
+
+    else:
+        print('[GEMINI] No image generation')
+        response = model.generate_content(prompt)
 
     return response
 

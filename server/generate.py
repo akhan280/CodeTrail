@@ -65,13 +65,15 @@ def generation(body: GenerateModel):
 
 @app.post("/api/code/generate")
 def code_generation(body: CodeGenModel):
-
+    print('[Code Generation] Starting')
     # TODO: Perform auth check
  
     model_family = body.provider
     model = body.model
     prompt = body.prompt
+
     image = body.image
+
     img_format = body.img_format
 
     image_data = [image, img_format]
@@ -85,7 +87,6 @@ def code_generation(body: CodeGenModel):
     elif (model_family == 'anthropic'):
         prompt_generator = claude_generation
 
-
     # 3) First pass creates code that's extremely well commented, complete, and documented
     try: 
         response = prompt_generator(model, generateCodeFromImage() + prompt, image_data)
@@ -95,12 +96,11 @@ def code_generation(body: CodeGenModel):
         return 500
     
 
-    print('Created Code')
-    print(response.text)
+    print('[Code Generation] Completed Code Generation')
 
     # 4) Second pass prompt modulation: create mermaid code
     try:
-        response = prompt_generator(model, generateMermaidCode() + image_data)
+        response = prompt_generator(model, generateMermaidCode() + response.text, image_data)
    
     except Exception as e:
         print(str(e))
