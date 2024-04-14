@@ -1,196 +1,131 @@
 {
-    "symbols": [
-      {
-        "symbol": "id1",
-        "start": 1,
-        "end": 8
-      },
-      {
-        "symbol": "id2",
-        "start": 9,
-        "end": 11
-      },
-      {
-        "symbol": "id3",
-        "start": 12,
-        "end": 14
-      },
-      {
-        "symbol": "id4",
-        "start": 15,
-        "end": 17
-      },
-      {
-        "symbol": "id5",
-        "start": 18,
-        "end": 21
-      },
-      {
-        "symbol": "id6",
-        "start": 22,
-        "end": 26
-      },
-      {
-        "symbol": "id7",
-        "start": 27,
-        "end": 29
-      },
-      {
-        "symbol": "id8",
-        "start": 30,
-        "end": 33
-      },
-      {
-        "symbol": "id9",
-        "start": 34,
-        "end": 37
-      },
-      {
-        "symbol": "id10",
-        "start": 34,
-        "end": 37
-      },
-      {
-        "symbol": "id11",
-        "start": 34,
-        "end": 37
-      },
-      {
-        "symbol": "id12",
-        "start": 38,
-        "end": 42
-      },
-      {
-        "symbol": "id13",
-        "start": 43,
-        "end": 45
-      },
-      {
-        "symbol": "id14",
-        "start": 46,
-        "end": 48
-      },
-      {
-        "symbol": "id15",
-        "start": 49,
-        "end": 51
-      },
-      {
-        "symbol": "id16",
-        "start": 52,
-        "end": 57
-      },
-      {
-        "symbol": "id17",
-        "start": 52,
-        "end": 57
-      },
-      {
-        "symbol": "id18",
-        "start": 52,
-        "end": 57
-      },
-      {
-        "symbol": "id19",
-        "start": 58,
-        "end": 60
-      },
-      {
-        "symbol": "id20",
-        "start": 61,
-        "end": 63
-      },
-      {
-        "symbol": "id21",
-        "start": 64,
-        "end": 64
-      }
-    ],
-    "graph": "
-      graph TD
-  %% Lines 1-8
-      subgraph Start
-      id1(Start) --> id2{Define_function_analyze_text_complexity}
-      end
-  
-  %% Lines 9-11
-      subgraph Split text into sentences 
-      id2 --> id3{Split_text_into_sentences}
-      end
-  
-  %% Lines 12-14
-      subgraph Initialize variables 
-      id3 --> id4{Initialize_variables_to_0_or_empty_set}
-      end
-  
-  %% Lines 15-17
-      subgraph Loop through sentences 
-      id4 --> id5{For_each_sentence_in_the_text}
-      end
-  
-  %% Lines 18-21
-      subgraph Loop through words in sentence
-      id5 --> id6{For_each_word_in_the_sentence}
-      end
-  
-  %% Lines 22-26
-      subgraph Process each word
-      id6 --> id7{Add_word_to_unique_words_set}
-      id7 --> id8{Check_if_word_is_long}
-      id8 -->|Yes| id9(Increment_long_word_count)
-      id8 -->|No| id6 
-      end
-  
-  %% Lines 27-29
-      subgraph Update word count
-      id9 --> id10{Update_word_count}
-      end
-  
-  %% Lines 30-33
-      subgraph Calculate average sentence length 
-      id10 --> id11{Calculate_average_sentence_length}
-      end
-  
-  %% Lines 34-37
-      subgraph Calculate percentage of long words 
-      id11 --> id12{Calculate_percentage_of_long_words}
-      end
-  
-  %% Lines 38-42
-      subgraph Calculate vocabulary diversity 
-      id12 --> id13{Calculate_vocabulary_diversity}
-      end
-  
-  %% Lines 43-45
-      subgraph Calculate complexity score 
-      id13 --> id14{Calculate_complexity_score}
-      end
-  
-  %% Lines 46-48
-      subgraph Check complexity score 
-      id14 --> id15{Check_if_complexity_score_exceeds_threshold}
-      end
-  
-  %% Lines 49-51
-      subgraph Provide feedback 
-      id15 -->|Complex| id16(Print_complexity_message_and_suggestions)
-      id15 -->|Not_complex| id19(Print_message)
-      end
-  
-  %% Lines 52-57
-      subgraph Suggestions
-      id16 --> id17{Check_average_sentence_length}
-      id17 --> |Too_long|id18(Print_suggestion)
-      id17 --> |OK|id20{Check_percentage_of_long_words}
-      id18 --> id20 
-      id20 -->|Too_high|id21(Print_suggestion)
-      id20 -->|OK|id19
-      id21 --> id19
-      end
-  
-  %% Line 58-60
-      subgraph Print readability message 
-      id19 --> id21(End)
-      end
-  "
-  }
+  "symbols": [
+    {
+      "symbol": "id1",
+      "filename": "analyze_text_complexity.py",
+      "start": 1,
+      "end": 8
+    },
+    {
+      "symbol": "id2",
+      "filename": "analyze_text_complexity.py",
+      "start": 9,
+      "end": 11
+    },
+    {
+      "symbol": "id3",
+      "filename": "analyze_text_complexity.py",
+      "start": 12,
+      "end": 14
+    },
+    {
+      "symbol": "id4",
+      "filename": "analyze_text_complexity.py",
+      "start": 15,
+      "end": 17
+    },
+    {
+      "symbol": "id5",
+      "filename": "analyze_text_complexity.py",
+      "start": 18,
+      "end": 21
+    },
+    {
+      "symbol": "id6",
+      "filename": "analyze_text_complexity.py",
+      "start": 22,
+      "end": 26
+    },
+    {
+      "symbol": "id7",
+      "filename": "analyze_text_complexity.py",
+      "start": 27,
+      "end": 29
+    },
+    {
+      "symbol": "id8",
+      "filename": "analyze_text_complexity.py",
+      "start": 30,
+      "end": 33
+    },
+    {
+      "symbol": "id9",
+      "filename": "analyze_text_complexity.py",
+      "start": 34,
+      "end": 37
+    },
+    {
+      "symbol": "id10",
+      "filename": "analyze_text_complexity.py",
+      "start": 34,
+      "end": 37
+    },
+    {
+      "symbol": "id11",
+      "filename": "analyze_text_complexity.py",
+      "start": 34,
+      "end": 37
+    },
+    {
+      "symbol": "id12",
+      "filename": "analyze_text_complexity.py",
+      "start": 38,
+      "end": 42
+    },
+    {
+      "symbol": "id13",
+      "filename": "analyze_text_complexity.py",
+      "start": 43,
+      "end": 45
+    },
+    {
+      "symbol": "id14",
+      "filename": "analyze_text_complexity.py",
+      "start": 46,
+      "end": 48
+    },
+    {
+      "symbol": "id15",
+      "filename": "analyze_text_complexity.py",
+      "start": 49,
+      "end": 51
+    },
+    {
+      "symbol": "id16",
+      "filename": "analyze_text_complexity.py",
+      "start": 52,
+      "end": 57
+    },
+    {
+      "symbol": "id17",
+      "filename": "analyze_text_complexity.py",
+      "start": 52,
+      "end": 57
+    },
+    {
+      "symbol": "id18",
+      "filename": "analyze_text_complexity.py",
+      "start": 52,
+      "end": 57
+    },
+    {
+      "symbol": "id19",
+      "filename": "analyze_text_complexity.py",
+      "start": 58,
+      "end": 60
+    },
+    {
+      "symbol": "id20",
+      "filename": "analyze_text_complexity.py",
+      "start": 61,
+      "end": 63
+    },
+    {
+      "symbol": "id21",
+      "filename": "analyze_text_complexity.py",
+      "start": 64,
+      "end": 64
+    }
+  ],
+  "graph": "graph TD;\n\n%% Lines 1-8\n\nsubgraph Start\nid1(Start) --> id2{Define_function_analyze_text_complexity};\nend;\n\n%% Lines 9-11\n\nsubgraph Split text into sentences\nid2 --> id3{Split_text_into_sentences};\nend;\n\n%% Lines 12-14\n\nsubgraph Initialize variables\nid3 --> id4{Initialize_variables_to_0_or_empty_set};\nend;\n\n%% Lines 15-17\n\nsubgraph Loop through sentences\nid4 --> id5{For_each_sentence_in_the_text};\nend;\n\n%% Lines 18-21\n\nsubgraph Loop through words in sentence\nid5 --> id6{For_each_word_in_the_sentence};\nend;\n\n%% Lines 22-26\n\nsubgraph Process each word\nid6 --> id7{Add_word_to_unique_words_set};\nid7 --> id8{Check_if_word_is_long};\nid8 -->|Yes| id9(Increment_long_word_count);\nid8 -->|No| id6;\nend;\n\n%% Lines 27-29\n\nsubgraph Update word count\nid9 --> id10{Update_word_count};\nend;\n\n%% Lines 30-33\n\nsubgraph Calculate average sentence length\nid10 --> id11{Calculate_average_sentence_length};\nend;\n\n%% Lines 34-37\n\nsubgraph Calculate percentage of long words\nid11 --> id12{Calculate_percentage_of_long_words};\nend;\n\n%% Lines 38-42\n\nsubgraph Calculate vocabulary diversity\nid12 --> id13{Calculate_vocabulary_diversity};\nend;\n\n%% Lines 43-45\n\nsubgraph Calculate complexity score\nid13 --> id14{Calculate_complexity_score};\nend;\n\n%% Lines 46-48\n\nsubgraph Check complexity score\nid14 --> id15{Check_if_complexity_score_exceeds_threshold};\nend;\n\n%% Lines 49-51\n\nsubgraph Provide feedback\nid15 -->|Complex| id16(Print_complexity_message_and_suggestions);\nid15 -->|Not_complex| id19(Print_message);\nend;\n\n%% Lines 52-57\n\nsubgraph Suggestions\nid16 --> id17{Check_average_sentence_length};\nid17 --> |Too_long|id18(Print_suggestion);\nid17 --> |OK|id20{Check_percentage_of_long_words};\nid18 --> id20;\nid20 -->|Too_high|id21(Print_suggestion);\nid20 -->|OK|id19;\nid21 --> id19;\nend;\n\n%% Line 58-60\n\nsubgraph Print readability message\nid19 --> id21(End);\nend;"
+}
