@@ -104,6 +104,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@types/pako": "^2.0.3",
     "axios": "^1.6.8",
     "js-base64": "^3.7.7",
     "mermaid": "^10.9.0",
