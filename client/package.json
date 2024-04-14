@@ -51,6 +51,10 @@
       {
         "command": "contrail.showGraph",
         "title": "Contrail: Show Graph"
+      },
+      {
+        "command": "contrail.makeGraph",
+        "title": "Contrail: Make Graph"
       }
     ]
   },

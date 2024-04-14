@@ -12,22 +12,24 @@ const useSVGStore = create<SVGState>((set) => ({
     updateSVGData: (data) => set({ svgData: data }),
 }));
 
+const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
+    if (!previewPanel) {
+        previewPanel = vscode.window.createWebviewPanel(
+            'showGraph',
+            'Show Graph',
+            vscode.ViewColumn.Two,
+            {}
+        );
+
+        previewPanel.webview.html = getWebviewContent(data);
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
     let previewPanel: vscode.WebviewPanel | undefined;
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('contrail.showGraph', () => {
-            if (!previewPanel) {
-                previewPanel = vscode.window.createWebviewPanel(
-                    'showGraph',
-                    'Show Graph',
-                    vscode.ViewColumn.Two,
-                    {}
-                );
-
-                previewPanel.webview.html = getWebviewContent(data);
-            }
-        })
+        vscode.commands.registerCommand('contrail.showGraph', makeGraphHandler(previewPanel))
     );
 }
 
