@@ -31,8 +31,8 @@ def generation(body: GenerateModel):
     prompt = body.prompt
     cache_file = body.cache_file
 
-    if cache_file == 'granular':
-        with open('../data/granular/payload.json', 'r') as f:
+    if cache_file in next(os.walk('../data/'))[1]:
+        with open(f'../data/{cache_file}/payload.json', 'r') as f:
             return json.load(f)
 
     response = None 
