@@ -19,8 +19,7 @@ def generateComments():
 def generateMermaidCode():
     prompt_text = """
 
-    You are an expert mermaid.js coder with a deep understanding of creating useful control flow diagrams. Your role is to meticulously analyze the provided code snippet, its comments, RMEs, and create mermaid.js code effectively. Ensure the snippet compiles.
-    
+    You are an expert mermaid.js coder with a deep understanding of creating useful control flow diagrams. Your role is to meticulously analyze the provided code snippet, its comments, RMEs, and create mermaid.js code effectively. Ensure the snippet compiles and only return the mermaid code.
 
     """
 
@@ -30,9 +29,7 @@ def generateMermaidCode():
 def generateMermaidMetadata():
     prompt_text = """
 
-    You are an expert mermaid.js json creator
-
-    After generating mermaid.js code, for each node you create, provide the following metadata in json, where the node's name is the key:
+    You are an expert mermaid.js json creator. For the following mermaid.js code, for each node you create, provide the following metadata in json, where the node's name is the key:
     {
     Node A: [
         Contextualization: "describe how the code snippet fits into the larger application or module. Highlight any connections to other code sections or modules.",
