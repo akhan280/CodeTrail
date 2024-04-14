@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
-from prompts import generateComments, generateMermaidCode, generateCodeFromImage, 
+from prompts import generateComments, generateMermaidCode, generateCodeFromImage
 
 app = FastAPI()
 
