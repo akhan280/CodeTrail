@@ -106,4 +106,4 @@ def code_generation(body: CodeGenModel):
         print(str(e))
         return {"error": str(e)}, 500
     
-    return {"code": response.text, "metadata": metadata.text}
+    return {"mermaid": response.text, "metadata": metadata.text}
