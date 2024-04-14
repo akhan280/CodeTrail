@@ -12,7 +12,139 @@ const useSVGStore = create<SVGState>((set) => ({
     updateSVGData: (data) => set({ svgData: data }),
 }));
 
-const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
+// function getMakeGraphWebViewContent() {
+//     return `
+//         <!DOCTYPE html>
+//         <html lang="en">
+//         <head>
+//             <meta charset="UTF-8">
+//             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//             <title>Text Input</title>
+//         </head>
+//         <body>
+//             <input type="text" id="inputField" placeholder="Type here...">
+//             <button onclick="sendText()">Submit</button>
+//             <div id="displayText"></div>
+
+//             <script>
+//                 const vscode = acquireVsCodeApi();
+//                 function sendText() {
+//                     const input = document.getElementById('inputField').value;
+//                     document.getElementById('displayText').innerText = input;
+//                 }
+//             </script>
+//         </body>
+//         </html>
+//     `;
+// }
+
+function getMakeGraphWebViewContent() {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Text Input</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 20px;
+                }
+                input[type="text"] {
+                    width: 300px; /* Wider input box */
+                    padding: 8px;
+                    font-size: 16px;
+                    margin-bottom: 10px;
+                }
+                button {
+                    padding: 8px 16px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    background-color: #0078d4;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                }
+                #dropZone {
+                    width: 300px;
+                    height: 200px;
+                    border: 2px dashed #0078d4;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: 20px;
+                    color: #555;
+                }
+                #dropZone.dragover {
+                    background-color: #f0f0f0;
+                }
+            </style>
+        </head>
+        <body>
+            <input type="text" id="inputField" placeholder="Type here...">
+            <button onclick="sendText()">Submit</button>
+            <div id="displayText"></div>
+            <div id="dropZone">Drag and drop an image here</div>
+
+            <script>
+                const vscode = acquireVsCodeApi();
+                
+                function sendText() {
+                    const input = document.getElementById('inputField').value;
+                    document.getElementById('displayText').innerText = input;
+                }
+
+                const dropZone = document.getElementById('dropZone');
+                dropZone.addEventListener('dragover', (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'copy';
+                    dropZone.classList.add('dragover');
+                });
+
+                dropZone.addEventListener('dragleave', (event) => {
+                    dropZone.classList.remove('dragover');
+                });
+
+                dropZone.addEventListener('drop', (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const files = event.dataTransfer.files;
+                    if (files.length > 0) {
+                        const file = files[0];
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.style.width = '100%';
+                                img.style.height = 'auto';
+                                dropZone.innerHTML = '';
+                                dropZone.appendChild(img);
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            dropZone.innerText = 'Please drop an image file.';
+                        }
+                    }
+                });
+            </script>
+        </body>
+        </html>
+    `;
+}
+
+
+const showGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
+
+    console.log("hi")
+
     if (!previewPanel) {
         previewPanel = vscode.window.createWebviewPanel(
             'showGraph',
@@ -21,15 +153,87 @@ const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () =
             {}
         );
 
-        previewPanel.webview.html = getWebviewContent(data);
+        previewPanel.onDidDispose(() => {
+            previewPanel = undefined;
+            // previewPanel = null;
+        }, null);
     }
+    else {
+        previewPanel.reveal(vscode.ViewColumn.Two);
+    }
+
+
+    // previewPanel.webview.html = getMakeGraphWebViewContent();
+
+        // previewPanel.webview.html = getWebviewContent();
+    
 }
+
+const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
+    return () => {
+        if (previewPanel) {
+            // Bring the panel to the foreground if it's already created
+            previewPanel.reveal(vscode.ViewColumn.Two);
+        } else {
+            // Create a new webview panel
+            previewPanel = vscode.window.createWebviewPanel(
+                'makeWebview',
+                'Make Webview',
+                vscode.ViewColumn.Two,
+                {
+                    // enableScripts: true
+                }
+            );
+
+            // Set the HTML content for the webview
+            previewPanel.webview.html = getMakeGraphWebViewContent();
+
+            // Clean up the panel on dispose
+            previewPanel.onDidDispose(() => {
+                previewPanel = undefined;
+                // previewPanel = null;
+            }, null);
+        }
+    };
+};
+
+// const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => () => {
+
+//     if (previewPanel){
+//         return;
+//     }
+
+//     previewPanel = vscode.window.createWebviewPanel(
+//         'textWebview',
+//         'Text Webview',
+//         vscode.ViewColumn.One,
+//         {
+//             enableScripts: true
+//         }
+//     );
+
+//     // previewPanel.webview.html = getWebviewContent();
+
+
+
+// //    previewPanel = vscode.window.createWebviewPanel(
+// //         'showGraph',
+// //         'Show Graph',
+// //         vscode.ViewColumn.Two,
+// //         {}
+    
+//         // previewPanel.webview.html = getWebviewContent();
+//     }
+// }
+
+
 
 export function activate(context: vscode.ExtensionContext) {
     let previewPanel: vscode.WebviewPanel | undefined;
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('contrail.showGraph', makeGraphHandler(previewPanel))
+        vscode.commands.registerCommand('contrail.showGraph', showGraphHandler(previewPanel)),
+        vscode.commands.registerCommand('contrail.makeGraph', makeGraphHandler(previewPanel))
     );
 }
 
