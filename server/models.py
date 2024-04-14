@@ -23,9 +23,7 @@ def gemini_generation(model, prompt, image_data):
         print('[GEMINI] Creating image response')
         image_url = image_data[0]
         img = Image.open(BytesIO(requests.get(image_url).content))
-        response = model.generate_content(
-            [prompt, img]
-        )
+        response = model.generate_content([prompt, img])
     else:
         print('[GEMINI] Generating w/no Image')
         model = genai.GenerativeModel(model)

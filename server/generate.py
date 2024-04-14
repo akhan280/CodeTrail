@@ -4,7 +4,7 @@ from fastapi.responses import PlainTextResponse, StreamingResponse
 from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
-from prompts import generateComments, generateMermaidCode, generateCodeFromImage, generateMermaidMetadata
+from prompts import generateComments, generateMermaidCode, generateCodeFromImage#, generateMermaidMetadata
 import json
 
 
@@ -87,7 +87,12 @@ def code_generation(body: CodeGenModel):
     prompt = body.prompt
     image = body.image
     img_format = body.img_format
+    cache_file = body.cache_file
     
+    if cache_file in next(os.walk('../data/'))[1]:
+        with open(f'../data/{cache_file}/payload.json', 'r') as f:
+            return json.load(f)
+
     response = None
     prompt_generator = None
     
@@ -113,7 +118,7 @@ def code_generation(body: CodeGenModel):
     except Exception as e:
         print(str(e))
         return 500
-    
+ 
     print('[Code Generation] Completed Mermaid Code')
     
     # # 5) Final pass metadata creation

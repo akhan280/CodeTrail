@@ -228,36 +228,38 @@ def generateMermaidCode():
     return prompt_text  
 
 # 3) Generates mermaid metadata from mermaid code and commented code snippet
-def generateMermaidMetadata():
-    prompt_text = """
+# included this in generateMermaidCode() prompt
+# def generateMermaidMetadata():
+#     prompt_text = """
 
-    You are an expert mermaid.js json creator. For the following mermaid.js code, for each node you create, provide the following metadata in json, where the node's name is the key:
-    {
-    Node A: [
-        Contextualization: "describe how the code snippet fits into the larger application or module. Highlight any connections to other code sections or modules.",
-        Parameter Documentation: "List and explain each parameter the code takes, including data types and expected values.",
-        Output Description: "Detail what the code returns, including possible states or outcomes based on different inputs.",
-        Dependency Identification:" Identify any external dependencies or libraries that the code relies on, including version numbers if applicable.",
-        Modification Log: "At the end of your commentary, provide a concise summary of any modifications you suggest for the snippet to improve clarity, efficiency, or compatibility. For example at the end, you should group modifications if need be: 'Modifies: <variable>, <variable>, <variable> to do <action>, <action>, <action>'
-    ]
-    etc...
-    }
+#     You are an expert mermaid.js json creator. For the following mermaid.js code, for each node you create, provide the following metadata in json, where the node's name is the key:
+#     {
+#     Node A: [
+#         Contextualization: "describe how the code snippet fits into the larger application or module. Highlight any connections to other code sections or modules.",
+#         Parameter Documentation: "List and explain each parameter the code takes, including data types and expected values.",
+#         Output Description: "Detail what the code returns, including possible states or outcomes based on different inputs.",
+#         Dependency Identification:" Identify any external dependencies or libraries that the code relies on, including version numbers if applicable.",
+#         Modification Log: "At the end of your commentary, provide a concise summary of any modifications you suggest for the snippet to improve clarity, efficiency, or compatibility. For example at the end, you should group modifications if need be: 'Modifies: <variable>, <variable>, <variable> to do <action>, <action>, <action>'
+#     ]
+#     etc...
+#     }
 
-    """
+#     """
 
-    return prompt_text
+#     return prompt_text
 
 
 # ------------ Reverse Mapping -----------------
 # Image/code request to mermaid + generated code
 
-
 def generateCodeFromImage():
     prompt_text = """
-    You are an expert software developer and machine learning engineer. From an image and an analysis task, develop the code that would perform the task.
+    You are an expert software developer and machine learning engineer. From the provided image and an analysis task, develop the code that would perform the task.
     Ensure that each piece of the process is well documented, so that someone well-versed in the programming language could understand the code without needing to see the image.
-    """
 
+    Here is the task:
+    """
+    
     return prompt_text  
 
 # Use GenerateMermaidCode() + GenerateMermaidMetadata() from here
