@@ -5,6 +5,8 @@ from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
 from prompts import generateComments, generateMermaidCode, generateCodeFromImage, generateMermaidMetadata
+import json
+
 
 app = FastAPI()
 
@@ -12,13 +14,14 @@ class GenerateModel(BaseModel):
     provider: str
     model: str
     prompt: str
+    cache_file: str
 
 class CodeGenModel(GenerateModel):
     image: str
     img_format: str
 
 # Generates api response from gemini
-@app.post("/api/graph/generate", response_class=PlainTextResponse)
+@app.post("/api/graph/generate")
 def generation(body: GenerateModel):
 
     # TODO: Perform auth check
@@ -26,6 +29,11 @@ def generation(body: GenerateModel):
     model_family = body.provider
     model = body.model
     prompt = body.prompt
+    cache_file = body.cache_file
+
+    if cache_file == 'granular':
+        with open('../data/granular/payload.json', 'r') as f:
+            return json.load(f)
 
     response = None 
     prompt_generator = None
@@ -57,7 +65,7 @@ def generation(body: GenerateModel):
         print(str(e))
         return 500
 
-    print('[Generate] Completed Mermaid Code. Creating metadata next')
+    print('[Generate] Completed Mermaid Code and Metadata.')
     
     # # 5) Final pass metadata creation
     # try:
