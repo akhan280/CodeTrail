@@ -196,6 +196,14 @@ function getWebviewContent(svg?: string) {
         const vscode = acquireVsCodeApi();
 
         document.querySelectorAll('[data-id]').forEach(element => {
+            element.style.cursor = 'pointer';
+            
+            element.addEventListener('mouseenter', function() {
+                element.style.filter = 'drop-shadow(0 0 10px rgba(255,99,71, 0.5))';
+            });
+            element.addEventListener('mouseleave', function() {
+                element.style.filter = '';
+            });
             element.addEventListener('click', function() {
                 const nodeId = this.getAttribute('data-id');
                 if(nodeId) {
