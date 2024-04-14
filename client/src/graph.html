@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SVG Preview</title>
+        <script src="https://cdn.jsdelivr.net/npm/zustand/dist/zustand.min.js"></script>
+    </head>
+    <body>
+        <div id="svg-container">Loading...</div>
+        <script>
+            const useSVGStore = window.zustand((set) => ({
+                svgData: 'Hello world',
+                updateSVGData: (data) => set({ svgData: data }),
+            }));
+
+            const { svgData, updateSVGData } = useSVGStore();
+
+            const svgContainer = document.getElementById('svg-container');
+            svgContainer.innerHTML = svgData;
+        </script>
+    </body>
+</html>
