@@ -12,6 +12,13 @@ export const makeMermaidPayload = (diagram: string) => ({
 });
 
 export function getMakeGraphWebViewContent() {
+    const scriptContent = `
+        const vscode = acquireVsCodeApi();
+        function submitHandler = () => {
+            vscode.postMessage({ command: 'submit' });
+        }
+    `;
+
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -59,55 +66,10 @@ export function getMakeGraphWebViewContent() {
             </style>
         </head>
         <body>
-            <input type="text" id="inputField" placeholder="Type here...">
-            <button onclick="sendText()">Submit</button>
-            <div id="displayText"></div>
-            <div id="dropZone">Drag and drop an image here</div>
-
-            <script>
-                const vscode = acquireVsCodeApi();
-                
-                function sendText() {
-                    const input = document.getElementById('inputField').value;
-                    document.getElementById('displayText').innerText = input;
-                }
-
-                const dropZone = document.getElementById('dropZone');
-                dropZone.addEventListener('dragover', (event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    event.dataTransfer.dropEffect = 'copy';
-                    dropZone.classList.add('dragover');
-                });
-
-                dropZone.addEventListener('dragleave', (event) => {
-                    dropZone.classList.remove('dragover');
-                });
-
-                dropZone.addEventListener('drop', (event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    dropZone.classList.remove('dragover');
-                    const files = event.dataTransfer.files;
-                    if (files.length > 0) {
-                        const file = files[0];
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                const img = document.createElement('img');
-                                img.src = e.target.result;
-                                img.style.width = '100%';
-                                img.style.height = 'auto';
-                                dropZone.innerHTML = '';
-                                dropZone.appendChild(img);
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            dropZone.innerText = 'Please drop an image file.';
-                        }
-                    }
-                });
-            </script>
+            <input type="text" id="inputField" placeholder="Your algorithm here...">
+            <input type="text" id="inputField" placeholder="Image URL">
+            <button onclick="() => {  }">Submit</button>
+            <script>(() => { ${} })()</script>
         </body>
         </html>
     `;

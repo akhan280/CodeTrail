@@ -1,0 +1,126 @@
+{
+    "code": "import cv2\n  def analyze_image(image_path):\n      img = cv2.imread(image_path)\n      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n      edges = cv2.Canny(gray, 100, 200)\n      contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)\n      snout_areas = []\n      for contour in contours:\n          area = cv2.contourArea(contour)\n          if area > 1000:\n              x, y, w, h = cv2.boundingRect(contour)\n              aspect_ratio = float(w) / h\n              if aspect_ratio > 1.5:\n                  snout_areas.append(area)\n      if len(snout_areas) > 0:\n          largest_snout = max(snout_areas)\n          if largest_snout > 5000:\n              print('Crocodile')\n          else:\n              print('Alligator (or possibly a different animal)')\n      else:\n          print('Unable to determine snout shape')\n  image_path = 'path/to/your/image.jpg'\n  analyze_image(image_path)",
+    "symbols": [
+      {
+        "symbol": "id1",
+        "start": 1,
+        "end": 3,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id2",
+        "start": 4,
+        "end": 7,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id3",
+        "start": 8,
+        "end": 8,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id4",
+        "start": 9,
+        "end": 9,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id5",
+        "start": 10,
+        "end": 10,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id6",
+        "start": 11,
+        "end": 11,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id7",
+        "start": 12,
+        "end": 12,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id8",
+        "start": 13,
+        "end": 16,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id9",
+        "start": 17,
+        "end": 29,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id10",
+        "start": 18,
+        "end": 18,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id11",
+        "start": 19,
+        "end": 21,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id12",
+        "start": 22,
+        "end": 28,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id13",
+        "start": 23,
+        "end": 23,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id14",
+        "start": 24,
+        "end": 27,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id15",
+        "start": 30,
+        "end": 36,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id16",
+        "start": 31,
+        "end": 31,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id17",
+        "start": 32,
+        "end": 34,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id18",
+        "start": 35,
+        "end": 35,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id19",
+        "start": 37,
+        "end": 37,
+        "filename": "data/alligator/payload.json"
+      },
+      {
+        "symbol": "id20",
+        "start": 38,
+        "end": 38,
+        "filename": "data/alligator/payload.json"
+      }
+    ],
+    "graph": "    graph TD\n%% Lines 1-3\n    subgraph Start\n    id1(Start) --> id2{Define function_analyze_image}\n    end\n%% Lines 4-7\n    subgraph Read image\n    id2 --> id3{Read_the_image}\n    end\n%% Line 8\n    subgraph Convert to grayscale\n    id3 --> id4{Convert_to_grayscale}\n    end\n%% Line 9\n    subgraph Edge detection\n    id4 --> id5{Perform_edge_detection}\n    end\n%% Line 10\n    subgraph Find contours\n    id5 --> id6{Find_contours}\n    end\n%% Line 11\n    subgraph Initialize snout analysis\n    id6 --> id7{Initialize_snout_areas_list}\n    end\n%% Lines 12-15\n    subgraph Loop through contours\n    id7 --> id8{For_each_contour}\n    end\n%% Line 16\n    subgraph Filter contours by area\n    id8 -->|Area_greater_than_1000| id9{Analyze_contour}\n    id8 -->|Area_less_than_or_equal_to_1000| id8\n    end\n%% Lines 17-21\n    subgraph Analyze contour shape\n    id9 --> id10{Calculate_aspect_ratio}\n    id10 -->|Aspect_ratio_greater_than_1.5| id11{Add_area_to_snout_areas}\n    id10 -->|Aspect_ratio_less_than_or_equal_to_1.5| id8\n    end\n%% Lines 22-27\n    subgraph Analyze snout areas\n    id11 --> id12{Check_if_snout_areas_is_empty}\n    id12 -->|Not_empty| id13{Find_largest_snout_area}\n    id12 -->|Empty| id19{Unable_to_determine_snout_shape}\n    id13 --> id14{Check_if_largest_snout_is_greater_than_5000}\n    id14 -->|Yes| id15{Crocodile}\n    id14 -->|No| id16{Alligator_or_other}\n    end\n%% Lines 28-35\n    subgraph Output results\n    id15 --> id17{Print_Crocodile}\n    id16 --> id17\n    id17 --> id18{End}\n    id19 --> id18\n    end\n%% Lines 36-37\n    subgraph Example usage\n    id18 --> id20{Example_usage}\n    end"
+  }

@@ -6,11 +6,12 @@ import { deflate } from 'pako';
 import * as vscode from 'vscode';
 
 import { makeMermaidPayload, getMakeGraphWebViewContent, getQueryWebViewContent } from './templates';
-import * as payload from '../../data/granular/payload.json';
+import * as granularPayload from '../../data/granular/payload.json';
+import * as alligatorPayload from '../../data/alligator/payload.json';
+
+let payload = granularPayload;
 
 // import mermaidAPI from 'mermaid/dist/mermaidAPI';
-
-
 
 async function copyTextToClipboard() {
     const editor = vscode.window.activeTextEditor;
@@ -31,75 +32,39 @@ const serialize = (state: string): string => {
     return fromUint8Array(compressed, true);
 };
 
-const showGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
-    return async () => {
-        // Copy selected text to clipboard before showing the graph
-        await copyTextToClipboard();
-
-        if (!previewPanel) {
-            previewPanel = vscode.window.createWebviewPanel(
-                'showGraph',
-                'Show Graph',
-                vscode.ViewColumn.Two,
-                {}
-            );
-
-            previewPanel.onDidDispose(() => {
-                previewPanel = undefined;
-            }, null);
-        } else {
-            previewPanel.reveal(vscode.ViewColumn.Two);
-        }
-
-        // Assuming getQueryWebViewContent() returns the content for the webview
-        previewPanel.webview.html = getQueryWebViewContent();
-
-        // Read the clipboard content
-        const clipboardContent = await vscode.env.clipboard.readText();
-
-        // Set the clipboard content as the value of the textarea
-        previewPanel.webview.postMessage({ type: 'setTextareaValue', value: clipboardContent });
-    };
-};
-
-const makeGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
-    return async () => {
-        if (previewPanel) {
-            // Bring the panel to the foreground if it's already created
-            previewPanel.reveal(vscode.ViewColumn.Two);
-        } else {
-            // Create a new webview panel
-            previewPanel = vscode.window.createWebviewPanel(
-                'makeWebview',
-                'Make Webview',
-                vscode.ViewColumn.Two,
-                {
-                    // enableScripts: true
-                }
-            );
-
-            // Set the HTML content for the webview
-            previewPanel.webview.html = getMakeGraphWebViewContent();
-
-            // Clean up the panel on dispose
-            previewPanel.onDidDispose(() => {
-                previewPanel = undefined;
-                // previewPanel = null;
-            }, null);
-        }
-
-        // Read the clipboard content
-        const clipboardContent = await vscode.env.clipboard.readText();
-
-        // Set the clipboard content as the value of the textarea
-        previewPanel.webview.postMessage({ type: 'setTextareaValue', value: clipboardContent });
-    };
-};
-
-
 export function activate(context: vscode.ExtensionContext) {
     let previewPanel: vscode.WebviewPanel;
+    let makePreviewPanel: vscode.WebviewPanel;
     const appLog = vscode.window.createOutputChannel("Contrail");
+
+    const mermaidToSVG = async (mermaid: string) => {
+        appLog.appendLine(mermaid);
+        const serialized = serialize(mermaid);
+        const endpoint = `https://mermaid.ink/svg/pako:${serialized}`;
+        appLog.appendLine(endpoint);
+        const res = await axios.get(endpoint, {
+            headers: {
+              "Accept-Encoding": "gzip, deflate",  // Note the missing Brotli here (br)
+            },
+            responseType: 'document'
+        });
+
+        appLog.appendLine(res.data);
+        return res.data;
+    };
+
+    const fetchSVG = async (panel: any) => {
+        try {
+            appLog.appendLine(payload.graph);
+            const svg = await mermaidToSVG(payload.graph);
+            appLog.appendLine(`SVG: ${svg}`);
+            panel.webview.html = getWebviewContent(svg);
+        }
+        catch (error) {
+            appLog.appendLine("Error fetching SVG from Mermaid code");
+            appLog.appendLine(error as string);
+        }
+    }
 
     const openFileAndHighlight = (payload: any, symbol: string) => {
         appLog.appendLine(`openFileAndHighlight`);
@@ -130,8 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     };
     
-
-    const makeGraphHandler = () => {
+    const showGraphHandler = () => {
         if (!previewPanel) {
             previewPanel = vscode.window.createWebviewPanel(
                 'showGraph',
@@ -153,42 +117,58 @@ export function activate(context: vscode.ExtensionContext) {
             )
     
             previewPanel.webview.html = getWebviewContent();
+            fetchSVG(previewPanel);
         }
     }
 
-    const mermaidToSVG = async (mermaid: string) => {
-        appLog.appendLine(mermaid);
-        const serialized = serialize(mermaid);
-        const endpoint = `https://mermaid.ink/svg/pako:${serialized}`;
-        appLog.appendLine(endpoint);
-        const res = await axios.get(endpoint, {
-            headers: {
-              "Accept-Encoding": "gzip, deflate",  // Note the missing Brotli here (br)
-            },
-            responseType: 'document'
-        });
+    const makeGraphHandler = () => {
+            if (makePreviewPanel) {
+                // Bring the panel to the foreground if it's already created
+                makePreviewPanel.reveal(vscode.ViewColumn.Two);
+            } else {
+                // Create a new webview panel
+                makePreviewPanel = vscode.window.createWebviewPanel(
+                    'makeWebview',
+                    'Make Webview',
+                    vscode.ViewColumn.Two,
+                    {
+                        // enableScripts: true
+                    }
+                );
+    
+                // Set the HTML content for the webview
+                makePreviewPanel.webview.html = getMakeGraphWebViewContent();
 
-        appLog.appendLine(res.data);
-        return res.data;
+                makePreviewPanel.webview.onDidReceiveMessage(
+                    (message: any) => {
+                        appLog.appendLine(JSON.stringify(message));
+                        if (message.command === 'submit') {
+                            payload = alligatorPayload;
+                            fetchSVG(makePreviewPanel);
+                        }
+                        else {
+                            vscode.env.clipboard.writeText(message.payload.code).then(() => {
+                                vscode.window.showInformationMessage('Code copied to clipboard.');
+                                vscode.commands.executeCommand('editor.action.clipboardPasteAction');
+                            });
+                        }
+                    }
+                )
+    
+                // Clean up the panel on dispose
+                makePreviewPanel.onDidDispose(() => {
+                }, null);
+            }
+    
+            // Read the clipboard content
+            vscode.env.clipboard.readText().then(value => {
+                makePreviewPanel.webview.postMessage({ type: 'setTextareaValue', value });
+            })
     };
 
-    const fetchSVG = async () => {
-        try {
-            appLog.appendLine(payload.graph);
-            const svg = await mermaidToSVG(payload.graph);
-            appLog.appendLine(`SVG: ${svg}`);
-            previewPanel.webview.html = getWebviewContent(svg);
-        }
-        catch (error) {
-            appLog.appendLine("Error fetching SVG from Mermaid code");
-            appLog.appendLine(error as string);
-        }
-    }
-
-    fetchSVG();
-
     context.subscriptions.push(
-        vscode.commands.registerCommand('contrail.showGraph', makeGraphHandler)
+        vscode.commands.registerCommand('contrail.showGraph', showGraphHandler),
+        vscode.commands.registerCommand('contrail.makeGraph', makeGraphHandler),
     );
 }
 
@@ -216,7 +196,6 @@ function getWebviewContent(svg?: string) {
 
         function onNodeClickHandler(nodeId) {
             console.log('Node clicked:', nodeId);
-            alert('clicked!')
             vscode.postMessage({
                 command: 'alert',
                 text: 'hi',
