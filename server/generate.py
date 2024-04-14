@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from typing import Union
 from pydantic import BaseModel
 from models import gemini_generation, claude_generation
@@ -106,13 +106,13 @@ def code_generation(body: CodeGenModel):
         print(str(e))
         return 500
     
-    print('[Code Generation] Completed Mermaid Code –– Starting Metadata Generation')
+    print('[Code Generation] Completed Mermaid Code')
     
-    # 5) Final pass metadata creation
-    try:
-        metadata = prompt_generator(model, generateMermaidMetadata() + response.text, [])
-    except Exception as e:
-        print(str(e))
-        return {"error": str(e)}, 500
+    # # 5) Final pass metadata creation
+    # try:
+    #     metadata = prompt_generator(model, generateMermaidMetadata() + response.text, [])
+    # except Exception as e:
+    #     print(str(e))
+    #     return {"error": str(e)}, 500
     
-    return {"mermaid": f"{response.text}", "metadata": f"{metadata.text}"}
+    return response

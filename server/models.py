@@ -90,4 +90,3 @@ def claude_generation(model, prompt, image_data):
 
     return message
 
-
