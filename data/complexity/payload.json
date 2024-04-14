@@ -1,0 +1,104 @@
+{
+    "symbols": [
+      {
+        "symbol": "Start",
+        "start": 1,
+        "end": 8
+      },
+      {
+        "symbol": "Split Text",
+        "start": 9,
+        "end": 10
+      },
+      {
+        "symbol": "Initialize variables",
+        "start": 11,
+        "end": 14
+      },
+      {
+        "symbol": "Loop through sentences",
+        "start": 15,
+        "end": 15
+      },
+      {
+        "symbol": "Process words in sentence",
+        "start": 16,
+        "end": 23
+      },
+      {
+        "symbol": "Calculate metrics",
+        "start": 24,
+        "end": 27
+      },
+      {
+        "symbol": "Calculate complexity score",
+        "start": 28,
+        "end": 28
+      },
+      {
+        "symbol": "Analyze complexity and provide suggestions",
+        "start": 29,
+        "end": 36
+      }
+    ],
+    "graph": "
+      graph TD
+  %% Lines 1-8
+      subgraph Start
+      id1(Start) --> id2{Define_function_analyze_text_complexity}
+      end
+  
+  %% Lines 9-10
+      subgraph Split Text 
+      id2 --> id3{Split_text_into_sentences}
+      end
+  
+  %% Lines 11-14
+      subgraph Initialize variables
+      id3 --> id4{Initialize_variables_to_0_or_empty_set}
+      end 
+  
+  %% Line 15
+      subgraph Loop through sentences
+      id4 --> id5{For_each_sentence_in_the_text}
+      end
+  
+  %% Lines 16-23
+      subgraph Process words in sentence
+      id5 --> id6{Split_sentence_into_words}
+      id6 --> id7{Update_word_count}
+      id7 --> id8{For_each_word_in_sentence}
+      id8 --> id9{Add_word_to_unique_words_set} 
+      id9 --> id10{Check_if_word_is_long}
+      id10 -->|Yes| id11(Increment_long_word_count) 
+      id10 -->|No| id8 
+      id11 --> id8
+      end 
+  
+  %% Lines 24-27
+      subgraph Calculate metrics
+      id11 --> id12{Calculate_avg_sentence_length}
+      id12 --> id13{Calculate_percent_long_words}
+      id13 --> id14{Calculate_vocab_diversity}
+      end
+  
+  %% Line 28
+      subgraph Calculate complexity score
+      id14 --> id15{Calculate_complexity_score}
+      end 
+  
+  %% Lines 29-36
+      subgraph Analyze complexity and provide suggestions 
+      id15 --> id16{Is_complexity_score_above_threshold}
+      id16 -->|Yes| id17(Print_complex_text_message)
+      id16 -->|No| id18(Print_easy_to_read_message)
+      id17 --> id19{Is_avg_sentence_length_too_long}
+      id19 --> |Yes| id20(Suggest_shortening_sentence_length)
+      id19 -->|No| id21{Check_percent_of_long_words}
+      id20 --> id21
+      id21 -->|High_percentage| id22(Suggest_using_simpler_vocab)
+      id21 -->|Low_percentage| id23(Return_complexity_score)
+      id22 --> id23 
+      id18 --> id23 
+      end"
+  }

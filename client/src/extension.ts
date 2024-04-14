@@ -2,6 +2,7 @@ import axios from 'axios';
 import { fromUint8Array } from 'js-base64';
 import { deflate } from 'pako';
 import * as vscode from 'vscode';
+import 
 
 import { makeMermaidPayload, getMakeGraphWebViewContent, getQueryWebViewContent } from './templates';
 // import mermaidAPI from 'mermaid/dist/mermaidAPI';
@@ -26,7 +27,6 @@ const serialize = (state: string): string => {
     const compressed = deflate(data, { level: 9 });
     return fromUint8Array(compressed, true);
 };
-
 
 const showGraphHandler = (previewPanel: vscode.WebviewPanel | undefined) => {
     return async () => {
@@ -139,11 +139,74 @@ export function activate(context: vscode.ExtensionContext) {
         C -->|Three| F[fa:fa-car Car]
     `;
 
+    const openFileAndHighlight = (payload: any, symbol: string) => {
+         // Find the corresponding symbol in the payload
+         const entry = payload.symbols.find((s: any) => s.symbol === symbol);
+
+         if (entry) {
+             const { filename, start, end } = entry;
+ 
+             // Open and reveal the file
+             const uri = vscode.Uri.file(`${vscode.workspace.rootPath  }/${  filename}`);
+             vscode.workspace.openTextDocument(uri).then(doc => {
+                 vscode.window.showTextDocument(doc, { preview: false }).then(editor => {
+                    // Create a new selection from start to end
+                    const range = new vscode.Range(start - 1, 0, end - 1, 0);
+                    editor.selection = new vscode.Selection(range.start, range.end);
+                    editor.revealRange(range);
+                });
+            });
+        }
+    };
+
     const fetchSVG = async () => {
         try {
             const svg = await mermaidToSVG(diagram);
             appLog.appendLine(`SVG: ${svg}`);
             previewPanel?.webview.postMessage({ generated: svg });
+
+            const payload = {
+                symbols: [
+                    {
+                        symbol: 'A',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                    {
+                        symbol: 'B',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                    {
+                        symbol: 'C',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                    {
+                        symbol: 'D',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                    {
+                        symbol: 'E',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                    {
+                        symbol: 'F',
+                        filename: 'foo.cpp',
+                        start: 15,
+                        end: 30,
+                    },
+                ],
+                graph: diagram,
+            };
+
             previewPanel.webview.html = getWebviewContent(svg);
         }
         catch (error) {
