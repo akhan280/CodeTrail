@@ -69,7 +69,7 @@ export function getMakeGraphWebViewContent() {
             <input type="text" id="inputField" placeholder="Your algorithm here...">
             <input type="text" id="inputField" placeholder="Image URL">
             <button onclick="() => {  }">Submit</button>
-            <script>(() => { ${} })()</script>
+            <script>(() => {})()</script>
         </body>
         </html>
     `;
